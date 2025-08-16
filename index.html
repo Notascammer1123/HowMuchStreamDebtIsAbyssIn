@@ -97,6 +97,59 @@
       font-weight: 700;
       color: #d64545;
     }
+    .appeal-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #1a3c7c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .appeal-button:hover {
+      background: #2a4c8c;
+    }
+    .password-prompt, .appeal-form {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #e3e8f2;
+      border-radius: 8px;
+    }
+    .password-prompt input, .appeal-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #d0d8e8;
+      border-radius: 4px;
+    }
+    .submit-btn {
+      padding: 8px 16px;
+      background: #1a3c7c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .submit-btn:hover {
+      background: #2a4c8c;
+    }
+    .success-message {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #2e9d5f;
+      color: white;
+      border-radius: 8px;
+    }
+    .error-message {
+      display: none;
+      margin-top: 10px;
+      color: #d64545;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -114,6 +167,25 @@
         <tbody></tbody>
       </table>
       <div class="total-sin" id="totalSin"></div>
+      
+      <button class="appeal-button" id="appealBtn">Appeal (As Abyss)</button>
+      
+      <div class="password-prompt" id="passwordPrompt">
+        <p>Enter the secret password to submit an appeal:</p>
+        <input type="password" id="passwordInput" placeholder="Password">
+        <button class="submit-btn" id="passwordSubmit">Submit</button>
+        <div class="error-message" id="passwordError"></div>
+      </div>
+      
+      <div class="appeal-form" id="appealForm">
+        <p>Enter your appeal message:</p>
+        <textarea id="appealMessage" rows="4" placeholder="Please explain why this debt should be forgiven..."></textarea>
+        <button class="submit-btn" id="appealSubmit">Submit Appeal</button>
+      </div>
+      
+      <div class="success-message" id="successMessage">
+        Your appeal has been sent, please wait as we consider it
+      </div>
     </div>
   </div>
 
@@ -123,6 +195,9 @@
       { name: "No Gartic on 15/8/25", sin: 4, paid: false },
       { name: "Late Stream on 16/8/25", sin: 5, paid: false },
     ];
+
+    // Secret password (change this to whatever you want)
+    const SECRET_PASSWORD = "abyssisthebestfromgeo";
 
     const tbody = document.querySelector("#debtTable tbody");
     let totalSin = 0;
@@ -144,6 +219,66 @@
     });
 
     document.getElementById('totalSin').textContent = `Total Sin Level: ${totalSin.toFixed(2)}`;
+
+    // Appeal functionality
+    const appealBtn = document.getElementById('appealBtn');
+    const passwordPrompt = document.getElementById('passwordPrompt');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordSubmit = document.getElementById('passwordSubmit');
+    const passwordError = document.getElementById('passwordError');
+    const appealForm = document.getElementById('appealForm');
+    const appealMessage = document.getElementById('appealMessage');
+    const appealSubmit = document.getElementById('appealSubmit');
+    const successMessage = document.getElementById('successMessage');
+
+    appealBtn.addEventListener('click', () => {
+      passwordPrompt.style.display = 'block';
+      appealBtn.style.display = 'none';
+    });
+
+    passwordSubmit.addEventListener('click', () => {
+      if (passwordInput.value === SECRET_PASSWORD) {
+        passwordPrompt.style.display = 'none';
+        appealForm.style.display = 'block';
+      } else {
+        passwordError.textContent = 'Incorrect password!';
+        passwordError.style.display = 'block';
+      }
+    });
+
+    appealSubmit.addEventListener('click', () => {
+      if (appealMessage.value.trim() === '') {
+        alert('Please enter an appeal message');
+        return;
+      }
+      
+      appealForm.style.display = 'none';
+      successMessage.style.display = 'block';
+      
+      // Reset form after showing success
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+        appealBtn.style.display = 'block';
+        passwordInput.value = '';
+        appealMessage.value = '';
+        passwordError.style.display = 'none';
+      }, 3000);
+    });
+
+    // Allow pressing Enter in password field
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        passwordSubmit.click();
+      }
+    });
+
+    // Allow pressing Enter in appeal textarea
+    appealMessage.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        appealSubmit.click();
+      }
+    });
   </script>
 </body>
 </html>

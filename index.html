@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="icon" href="abyssp.png" type="image/png">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>How much stream debt is Abyss in?</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f2f6fc;
+      margin: 0;
+      padding: 40px;
+      color: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #1a3c7c;
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 20px;
+      max-width: 700px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 14px 12px;
+      text-align: left;
+    }
+    th {
+      color: #1a3c7c;
+      font-weight: 600;
+      border-bottom: 2px solid #d0d8e8;
+    }
+    tr + tr {
+      border-top: 1px solid #e3e8f2;
+    }
+    .status-bubble {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    .paid .status-bubble {
+      background: #2e9d5f;
+    }
+    .unpaid .status-bubble {
+      background: #d64545;
+    }
+    .debt-row {
+      display: flex;
+      align-items: center;
+    }
+    .debt-info {
+      flex: 1;
+    }
+    .sin-level {
+      font-weight: 600;
+      color: #1a3c7c;
+    }
+    .animated-image img {
+      width: 150px;
+      height: auto;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0); }
+    }
+    .total-sin {
+      margin-top: 15px;
+      font-weight: 700;
+      color: #d64545;
+    }
+  </style>
+</head>
+<body>
+  <h1>How much stream debt is Abyss in?</h1>
+  <div class="container">
+    <div class="animated-image">
+      <!-- Replace the src with your own image file -->
+      <img src="abyssp.png" alt="Animated Abyss Image">
+    </div>
+    <div class="card">
+      <table id="debtTable">
+        <thead>
+          <tr><th>Debt</th><th>Sin Level</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="total-sin" id="totalSin"></div>
+    </div>
+  </div>
+
+  <script>
+    // 🔒 Hard-coded debt list (edit here only!)
+    const debts = [
+      { name: "No Gartic on 15/8/25", sin: 4, paid: false },
+      { name: "Late Stream on 16/8/25", sin: 5, paid: false },
+    ];
+
+    const tbody = document.querySelector("#debtTable tbody");
+    let totalSin = 0;
+
+    debts.forEach(debt => {
+      const tr = document.createElement("tr");
+      tr.className = debt.paid ? "paid" : "unpaid";
+      tr.innerHTML = `
+        <td>
+          <div class="debt-row">
+            <div class="status-bubble">${debt.paid ? "✔" : "✖"}</div>
+            <div class="debt-info">${debt.name}</div>
+          </div>
+        </td>
+        <td class="sin-level">${debt.sin.toFixed(2)}</td>
+      `;
+      tbody.appendChild(tr);
+      totalSin += debt.sin;
+    });
+
+    document.getElementById('totalSin').textContent = `Total Sin Level: ${totalSin.toFixed(2)}`;
+  </script>
+</body>
+</html>
